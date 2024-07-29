@@ -1,0 +1,13 @@
+const mongoose = require('mongoose');
+
+const connectDb = async() => {
+    try {
+        await mongoose.connect('mongodb://127.0.0.1:27017/myDatabase');
+        console.log('Connected To MongoDb');
+    }
+    catch(error) {
+        console.log("Failed while connecting to MongoDb", error)
+    }
+}
+
+module.exports = connectDb;
