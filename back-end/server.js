@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 const app = express();
 const port = 8000;
 const connectDb = require("./db/dbConnection");
@@ -11,7 +12,10 @@ app.use(express.json());
 // Enabled CORS
 app.use(cors());
 
-// Registration :-
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, '../front-end/build')));
+
+// Registration Route :-
 app.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -24,7 +28,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Login :-
+// Login Route :-
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -45,8 +49,15 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/build', 'index.html'));
+});
+
+// Connect to the database
 connectDb();
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
